@@ -42,7 +42,7 @@ function mergeSort(array) {
   return merge(left, right);
 }
 
-const prettyPrint = (node, prefix = '', isLeft = true) => {
+export const prettyPrint = (node, prefix = '', isLeft = true) => {
   if (node === null) {
     return;
   }
@@ -73,7 +73,7 @@ class Node {
   }
 }
 
-class Tree {
+export class Tree {
   constructor(array) {
     this.array = array;
     this.root = buildTree(mergeSort(array));
@@ -247,16 +247,3 @@ const buildTree = function buildBalancedBinarySearchTree(array) {
 
   return root;
 };
-
-const tree = new Tree([1, 7, 4, 23, 8, 9, 4, 3, 5, 2, 6, 7, 9, 67, 6345, 324]);
-tree.insert(600);
-tree.insert(700);
-tree.insert(800);
-tree.insert(680);
-
-// const tree = new Tree([1, 2, 3]);
-prettyPrint(tree.root);
-
-console.log('isBalanced: ' + tree.isBalanced());
-tree.rebalance();
-prettyPrint(tree.root);
