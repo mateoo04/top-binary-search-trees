@@ -55,6 +55,16 @@ const prettyPrint = (node, prefix = '', isLeft = true) => {
   }
 };
 
+//First goes right and then to the leftmost leaf node to get the next smallest element in the tree
+function getSuccessor(currentNode) {
+  currentNode = currentNode.right;
+  while (currentNode !== null && currentNode.left !== null) {
+    currentNode = currentNode.left;
+  }
+
+  return currentNode;
+}
+
 class Node {
   constructor(data) {
     this.data = data;
@@ -69,8 +79,38 @@ class Tree {
     this.root = buildTree(mergeSort(array));
   }
 
-  insert(value) {
-    let currentNode = this.root;
+  insert(data, root = this.root) {
+    if (root === null) return new Node(data);
+
+    if (data < root.data) root.left = this.insert(data, root.left);
+    else if (data > root.data) root.right = this.insert(data, root.right);
+
+    return root;
+  }
+
+  deleteItem(data, root = this.root) {
+    if (root === null) return root;
+
+    if (data < root.data) {
+      root.left = this.deleteItem(data, root.left);
+    } else if (data > root.data) {
+      root.right = this.deleteItem(data, root.right);
+    } else {
+      /*When one child is null, the other one will be returned,
+      if both are null, null will be returned */
+      if (root.left === null) return root.right;
+      else if (root.right === null) return root.left;
+
+      const successor = getSuccessor(root);
+      root.data = successor.data;
+      this.deleteItem(successor.data, root.right);
+    }
+
+    if (root === this.root) {
+      this.root = root;
+      return;
+    }
+    return root;
   }
 }
 
@@ -87,5 +127,8 @@ const buildTree = function buildBalancedBinarySearchTree(array) {
 };
 
 const tree = new Tree([1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]);
-
+// tree.insert(21);
+// tree.insert(0);
+// tree.insert(60);
+tree.deleteItem(4);
 prettyPrint(tree.root);
